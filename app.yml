@@ -21,26 +21,13 @@ spec:
           ports:
             - containerPort: 5000
           env:
-            - name: POSTGRES_USER
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-config
-                  key: POSTGRES_USER 
             - name: POSTGRES_PASSWORD
               valueFrom:
-                configMapKeyRef:
-                  name: postgres-config
-                  key: POSTGRES_PASSWORD
-            - name: POSTGRES_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-config
-                  key: POSTGRES_DB
+                secretKeyRef:
+                  name: postgres-postgresql   
+                  key: postgres-password
             - name: POSTGRES_HOST
-              value: postgres
-            - name: POSTGRES_PORT
-              value: '5432'
-
+              value: postgres-postgresql
 ---
 apiVersion: v1
 kind: Service
@@ -53,4 +40,4 @@ spec:
     targetPort: 5000
   selector:
     app: flaskapi
-  type: NodePort
+  type: LoadBalancer
