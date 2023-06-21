@@ -15,12 +15,11 @@ def read_csv(csv_file):
         data = list(reader)
         return data
 
-
 conn = psycopg2.connect(
     host='localhost',
     port=5432,
     user='postgres',
-    password='4y7sV96vA9wv46VR',
+    password='hi',
     database='postgres'
 )
 print("Connection to PostgreSQL successful!")
