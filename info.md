@@ -15,3 +15,4 @@ CREATE TABLE orders (
     order_date DATE,
     priority VARCHAR(255)
 );
+kubectl exec -it pos --  psql -h localhost -U admin --password -p 5432 postgresdb

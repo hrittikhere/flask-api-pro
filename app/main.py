@@ -1,6 +1,25 @@
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import psycopg2
+import os
+
+
+app = Flask(__name__)
+
+user = os.environ['POSTGRES_USER']
+password = os.environ['POSTGRES_PASSWORD']
+host = os.environ['POSTGRES_HOST']
+database = os.environ['POSTGRES_DB']
+port = os.environ['POSTGRES_PORT']
+
+DATABASE_CONNECTION_URI = f'postgresql+psycopg2://{user}:{password}@{host}:{port}/{database}'
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_CONNECTION_URI
+
+
+db = SQLAlchemy(app)
+
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:4y7sV96vA9wv46VR@localhost:5432/postgres'
+# db = SQLAlchemy(app)
 
 
 conn = psycopg2.connect(
@@ -15,10 +34,6 @@ print("Connection to PostgreSQL successful!")
 cursor = conn.cursor()
 
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:4y7sV96vA9wv46VR@localhost:5432/postgres'
-db = SQLAlchemy(app)
-
 
 @app.route('/')
 def index():
@@ -31,17 +46,12 @@ def index():
             "customer": {
                 "name": row[1],
                 "email": row[2],
-                "address": {
-                    "street": row[3],
-                    "city": row[4],
-                    "state": row[5],
-                    "postal_code": row[6]
-                }
+                "address": row[3]
             },
-            "product_name": row[7],
-            "quantity": row[8],
-            "order_date": row[9],
-            "priority": row[10]
+            "product_name": row[4],
+            "quantity": row[5],
+            "order_date": row[6],
+            "priority": row[7]
         }
         formatted_results.append(order)
 
@@ -49,4 +59,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001)
+    app.run(host='0.0.0.0', port=5000)

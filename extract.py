@@ -1,13 +1,6 @@
 import csv
 import psycopg2
 
-# Database connection details
-db_host = 'localhost'
-db_port = 5432
-db_name = 'postgres'
-db_user = '4y7sV96vA9wv46VR'
-db_password = 'postgres'
-
 # CSV file path
 csv_file = 'MOCK_DATA.csv'
 
