@@ -3,7 +3,7 @@ kind: Job
 metadata:
   name: feed-db
 spec:
-  ttlSecondsAfterFinished: 10
+  ttlSecondsAfterFinished: 1000
   template:
     spec:
       containers:

@@ -16,6 +16,9 @@ def read_csv(csv_file):
         data = list(reader)
         return data
 
+# connect to database
+
+
 def get_db_connection():
     conn = psycopg2.connect(
         host=os.environ['POSTGRES_HOST'],
@@ -23,17 +26,25 @@ def get_db_connection():
         password=os.environ['POSTGRES_PASSWORD'],
         database='postgres'
     )
-
     print("Connection to PostgreSQL successful!")
-    # conn.close()
     return conn
+
 
 conn = get_db_connection()
 cur = conn.cursor()
 
-data = read_csv(csv_file)
+# create table
 
-def write_to_db(data):
+
+def create_table():
+    cur.execute("CREATE TABLE IF NOT EXISTS orders (order_id integer, customer_name text, customer_email text, customer_address text, product_name text, quantity integer, order_date date, priority text)")
+    print("Table created successfully")
+    conn.commit()
+
+
+# write to database
+def write_to_db():
+    data = read_csv(csv_file)
     for user in data:
         print(user)
         id = user[0]
@@ -48,6 +59,8 @@ def write_to_db(data):
                     (id, first_name, email, address, product, quantity, date, priorty))
 
 
-write_to_db(data)
+create_table()
+write_to_db()
+
 conn.commit()
 conn.close()
