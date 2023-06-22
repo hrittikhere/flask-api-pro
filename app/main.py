@@ -17,7 +17,7 @@ def get_db_connection():
     # conn.close()
     return conn
 
-
+# Get all orders 
 @app.route('/')
 def all():
     try:
@@ -45,7 +45,7 @@ def all():
     except psycopg2.Error:
         return jsonify({'error': 'Failed to retrieve order'}), 500
 
-
+# Get order details by order_id
 @app.route('/orders/<order_id>', methods=['GET'])
 def get_order_by_number(order_id):
     try:
@@ -70,11 +70,30 @@ def get_order_by_number(order_id):
                 "order_date": order[6],
                 "priority": order[7]
             }
-            return jsonify(formatted_order)
+            return jsonify(formatted_order), 200
         else:
             return jsonify({'error': 'Order not found'}), 404
     except psycopg2.Error:
         return jsonify({'error': 'Failed to retrieve order'}), 500
+
+# Delete an order by order_id
+@app.route('/order/<order_id>', methods=['DELETE'])
+def delete_order(order_id):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM orders WHERE order_id = %s", (order_id,))
+        order = cursor.fetchone()
+
+        if order:
+            cursor.execute(
+                "DELETE FROM orders WHERE order_id = %s", (order_id,))
+            conn.commit()
+            return jsonify({'message': 'Order deleted successfully'})
+        else:
+            return jsonify({'error': 'Order not found'}), 404
+    except psycopg2.Error:
+        return jsonify({'error': 'Failed to delete order'}), 500
 
 
 if __name__ == '__main__':
