@@ -19,3 +19,21 @@ kubectl exec -it postgres-7454f995b-4j6zs --  psql -h localhost -U admin --passw
 
 
  kubectl exec -it postgres-7454f995b-4j6zs --  psql -h localhost -U postgres --password -p 5432 postgres
+
+
+
+ ```json
+{
+  "customer": {
+    "name": "John Doe",
+    "email": "johndoe@example.com",
+    "address": "123 Main St, City, Country"
+  },
+  "order_id": 3433,
+  "product_name": "Widget",
+  "quantity": 5,
+  "order_date": "2023-06-22",
+  "priority": "high"
+}
+
+ ```
