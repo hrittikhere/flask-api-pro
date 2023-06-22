@@ -20,7 +20,7 @@ def get_db_connection():
 # Get all orders
 
 
-@app.route('/')
+@app.route('/', METHOD=['GET'])
 def all():
     try:
         conn = get_db_connection()
@@ -86,6 +86,7 @@ def get_order_by_number(order_id):
 @app.route('/order/<int:order_id>', methods=['DELETE'])
 def delete_order(order_id):
     try:
+
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM orders WHERE order_id = %s", (order_id,))
@@ -126,7 +127,7 @@ def create_order():
 
         return jsonify({'order_id': order_id}), 201
     except KeyError:
-        return jsonify({'error': 'Invalid request payload'}), 400
+        return jsonify({'error': 'Invalid request payload'}), 401
     except psycopg2.Error:
         return jsonify({'error': 'Failed to create order'}), 500
 
