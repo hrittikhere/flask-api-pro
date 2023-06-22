@@ -20,7 +20,7 @@ def get_db_connection():
 # Get all orders
 
 
-@app.route('/', METHOD=['GET'])
+@app.route('/', methods=['GET'])
 def all():
     try:
         conn = get_db_connection()
@@ -130,6 +130,44 @@ def create_order():
         return jsonify({'error': 'Invalid request payload'}), 401
     except psycopg2.Error:
         return jsonify({'error': 'Failed to create order'}), 500
+
+
+@app.route('/order/search', methods=['GET'])
+def search_orders():
+    try:
+        # Get the search query from the query parameters
+        search_query = request.args.get('q')
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Retrieve the orders matching the search query from the database
+        cursor.execute(
+            "SELECT * FROM orders WHERE product_name LIKE %s", ('%' + search_query + '%',))
+        orders = cursor.fetchall()
+
+        if orders:
+            # Create a list of dictionaries representing the matched orders
+            orders_list = []
+            for order in orders:
+                order_dict = {
+                    'order_id': order[0],
+                    'customer_name': order[1],
+                    'customer_email': order[2],
+                    'customer_address': order[3],
+                    'product_name': order[4],
+                    'quantity': order[5],
+                    'order_date': order[6],
+                    'priority': order[7]
+                }
+                orders_list.append(order_dict)
+
+            return jsonify({'orders': orders_list}), 200
+        else:
+            return jsonify({'message': 'No orders found matching the search query'}), 200
+
+    except psycopg2.Error:
+        return jsonify({'error': 'Failed to retrieve orders'}), 500
 
 
 if __name__ == '__main__':
