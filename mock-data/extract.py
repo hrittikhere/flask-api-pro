@@ -1,5 +1,6 @@
 import csv
 import psycopg2
+import os
 
 # CSV file path
 csv_file = 'MOCK_DATA.csv'
@@ -15,19 +16,22 @@ def read_csv(csv_file):
         data = list(reader)
         return data
 
-conn = psycopg2.connect(
-    host='localhost',
-    port=5432,
-    user='postgres',
-    password='hi',
-    database='postgres'
-)
-print("Connection to PostgreSQL successful!")
-# conn.close()
+def get_db_connection():
+    conn = psycopg2.connect(
+        host=os.environ['POSTGRES_HOST'],
+        user='postgres',
+        password=os.environ['POSTGRES_PASSWORD'],
+        database='postgres'
+    )
+
+    print("Connection to PostgreSQL successful!")
+    # conn.close()
+    return conn
+
+conn = get_db_connection()
 cur = conn.cursor()
 
 data = read_csv(csv_file)
-
 
 def write_to_db(data):
     for user in data:

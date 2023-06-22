@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: feed-db
+spec:
+  ttlSecondsAfterFinished: 10
+  template:
+    spec:
+      containers:
+      - name: feed-db
+        image: hrittik/mock-date
+        command: ["python",  "extract.py"]
+        env:
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-postgresql   
+                key: postgres-password
+          - name: POSTGRES_HOST
+            value: postgres-postgresql
+      restartPolicy: Never
