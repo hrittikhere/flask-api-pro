@@ -9,7 +9,7 @@ WORKDIR /app
 RUN pip install -r requirements.txt
 
 # Add the following to the Dockerfile to run the app on port 9000
-EXPOSE 5000
+EXPOSE 80
 
 # Add the following to the Dockerfile to run the app in your container
 CMD ["python", "main.py", "--host=0.0.0.0"]
