@@ -1,27 +1,34 @@
 from flask import Flask, jsonify, request
 import psycopg2
 import os
+from flasgger import Swagger
 
 app = Flask(__name__)
+swagger = Swagger(app)
 
 
 def get_db_connection():
+    """
+    Establishes a connection to the PostgreSQL database.
+    """
     conn = psycopg2.connect(
         host=os.environ['POSTGRES_HOST'],
         user='postgres',
         password=os.environ['POSTGRES_PASSWORD'],
         database='postgres'
     )
-
-    print("Connection to PostgreSQL successful!")
-    # conn.close()
     return conn
-
-# Get all orders
 
 
 @app.route('/', methods=['GET'])
 def all():
+    """
+    Retrieve all orders.
+    ---
+    responses:
+      200:
+        description: A list of orders.
+    """
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -47,11 +54,24 @@ def all():
     except psycopg2.Error:
         return jsonify({'error': 'Failed to retrieve order'}), 500
 
-# Get order details by order_id
-
 
 @app.route('/order/<int:order_id>', methods=['GET'])
 def get_order_by_number(order_id):
+    """
+    Retrieve order details by order_id.
+    ---
+    parameters:
+      - name: order_id
+        in: path
+        type: integer
+        required: true
+        description: The ID of the order to retrieve.
+    responses:
+      200:
+        description: The order with the specified ID.
+      404:
+        description: Order not found.
+    """
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -81,12 +101,24 @@ def get_order_by_number(order_id):
         return jsonify({'error': 'Failed to retrieve order'}), 500
 
 
-# Delete an order by order_id
-
 @app.route('/order/<int:order_id>', methods=['DELETE'])
 def delete_order(order_id):
+    """
+    Delete an order by order_id.
+    ---
+    parameters:
+      - name: order_id
+        in: path
+        type: integer
+        required: true
+        description: The ID of the order to delete.
+    responses:
+      200:
+        description: Order deleted successfully.
+      404:
+        description: Order not found.
+    """
     try:
-
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM orders WHERE order_id = %s", (order_id,))
@@ -102,11 +134,57 @@ def delete_order(order_id):
     except psycopg2.Error:
         return jsonify({'error': 'Failed to delete order'}), 500
 
-# Create a new order
-
 
 @app.route('/order', methods=['POST'])
 def create_order():
+    """
+    Create a new order.
+    ---
+    parameters:
+      - name: order_details
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            order_id:
+              type: integer
+              description: The ID of the order.
+            customer:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the customer.
+                email:
+                  type: string
+                  description: The email of the customer.
+                address:
+                  type: string
+                  description: The address of the customer.
+              required:
+                - name
+                - email
+                - address
+            product_name:
+              type: string
+              description: The name of the product.
+            quantity:
+              type: integer
+              description: The quantity of the product.
+            order_date:
+              type: string
+              format: date
+              description: The order date (YYYY-MM-DD).
+            priority:
+              type: string
+              description: The priority of the order.
+    responses:
+      201:
+        description: Order created successfully.
+      401:
+        description: Invalid request payload.
+    """
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -134,6 +212,21 @@ def create_order():
 
 @app.route('/order/search', methods=['GET'])
 def search_orders():
+    """
+    Search orders by product name.
+    ---
+    parameters:
+      - name: q
+        in: query
+        type: string
+        required: true
+        description: The search query.
+    responses:
+      200:
+        description: A list of orders matching the search query.
+      500:
+        description: Failed to retrieve orders.
+    """
     try:
         # Get the search query from the query parameters
         search_query = request.args.get('q')
