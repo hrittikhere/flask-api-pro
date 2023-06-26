@@ -74,7 +74,7 @@ Install Postgres:
 9. Test the API by making requests to different endpoints:
 
 * Create a new order: POST /orders with the below json:
-  ```json
+```json
   {
  "customer": {
    "name": "John Doe",
@@ -87,8 +87,7 @@ Install Postgres:
  "order_date": "2023-06-22",
  "priority": "high"
 }
-
-  ```
+```
 * Get an order: GET /order/<order_id>
 * List all orders: GET /order
 * Delete an order: DELETE /order/<order_id>
