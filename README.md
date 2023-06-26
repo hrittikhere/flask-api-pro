@@ -1,39 +1,119 @@
-# flask-api-pro
+# Flask API for Managing Orders Data
 
-## Deployment Prerequisites
-Before proceeding with the steps to create a PostgreSQL database using Helm, run a Kubernetes job, and deploy an application and service, you will need the following prerequisites:
+This Flask API allows users to manage orders data stored in a PostgreSQL database. The API provides endpoints for creating, reading, updating, and deleting orders.
 
-1. Kubernetes cluster: Set up a functioning Kubernetes cluster. You can use a managed Kubernetes service like Google Kubernetes Engine (GKE), Amazon Elastic Kubernetes Service (EKS), or deploy your own cluster using tools like Minikube or kubeadm.
+## Prerequisites
 
-2. Helm: Install Helm, a package manager for Kubernetes, on your local machine. Helm simplifies the deployment and management of applications on Kubernetes.
+Before setting up and running the Flask API application, ensure you have the following prerequisites installed:
 
-3. kubectl: Install the `kubectl` command-line tool, which allows you to interact with your Kubernetes cluster.
+- Docker
+- Kubernetes (kubectl)
+- PostgreSQL
 
-4. Helm chart repository: Ensure that you have a Helm chart repository set up or have access to a publicly available Helm chart repository. Helm charts are packages of pre-configured Kubernetes resources that simplify the deployment of applications.
+## Setup
 
-## Step 1: Create a PostgreSQL Database using Helm
-1. Add a Helm chart repository for PostgreSQL by running the following command:
-   ```
-   helm repo add bitnami https://charts.bitnami.com/bitnami
-   ```
+Follow the steps below to set up and run the Flask API application:
 
-2. Update the Helm chart repositories:
-   ```
-   helm repo update
-   ```
+1. Clone the repository:
 
-3. Install PostgreSQL using Helm. Run the following command, adjusting the release name (`my-postgresql-release`) and any other configuration values as necessary:
-   ```
-   helm install my-postgresql-release bitnami/postgresql
+   ```shell
+   $ git clone https://github.com/yourusername/flask-app.git
+   $ cd flask-app
    ```
 
-   This command deploys a PostgreSQL database using the Bitnami PostgreSQL Helm chart.
-
-4. Verify that the PostgreSQL database has been successfully deployed by running:
-   ```
-   helm list
+2. Build the Docker image for the Flask application:
+   ```shell
+   $ docker build -t flask-api .
    ```
 
-   The output should display the status of the Helm release, including the PostgreSQL release you just created.
+3. Build the Docker image for the Mocker:
+  ```shell
+   $ docker build -t mock-data .
+   ```
 
-## Step 2: Run a Kubernetes Job using job.
+4. Create a Kubernetes cluster either in the cloud or locally. Make sure kubectl is configured to access the cluster.
+
+5. Create a PostgreSQL database instance or use an existing one.
+
+Install Helm:
+   ```shell
+   $ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+   ```
+
+Install Postgres: 
+   ```shell
+   $ helm repo add bitnami https://charts.bitnami.com/bitnami 
+   $ helm install postgres bitnami/postgresql
+   ```
+
+
+6. Apply the Kubernetes manifests to deploy the Flask application and run job to store order data into the database:
+   ```shell
+   $ kubectl apply -f app.yml
+   $ kubectl apply -f job.yml
+   ```
+
+7. Verify that the pods and services are running:
+   ```shell
+   $ kubectl get pods
+   $ kubectl get svc   
+   ```
+   
+8. Access the Flask API:
+
+- Get the external IP address of the Flask application service:
+   ```shell
+   $ kubectl get svc flask-service
+   ```
+
+- Use tools like cURL or Postman to send HTTP requests to the API endpoints, using the obtained IP address. For example:
+   ```shell
+   $ curl http://<flask-service-external-ip>/orders
+   ```
+
+9. Test the API by making requests to different endpoints:
+
+* Create a new order: POST /orders with the below json:
+  ```json
+  {
+ "customer": {
+   "name": "John Doe",
+   "email": "johndoe@example.com",
+   "address": "123 Main St, City, Country"
+ },
+ "order_id": 3433,
+ "product_name": "Widget",
+ "quantity": 5,
+ "order_date": "2023-06-22",
+ "priority": "high"
+}
+
+  ```
+* Get an order: GET /order/<order_id>
+* List all orders: GET /order
+* Delete an order: DELETE /order/<order_id>
+* Search an order with: Get /order/search
+
+## Dependencies
+
+The Flask API application has the following dependencies:
+
+* Flask
+* psycopg2
+
+These dependencies are included in the requirements.txt file.
+
+To install the dependencies locally, run the following command:
+```bash
+pip install -r app/requirements.txt mock-data/requirements.txt
+```
+
+## Additional Information
+
+The Flask API handles errors and returns appropriate HTTP status codes:
+
+* 404 - Not found if the data is not found
+* 401 - Invalid request
+* 405 - Method not allowed
+
+
