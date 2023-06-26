@@ -7,15 +7,25 @@ on:
     branches: [ "master" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
+
     - name: Build Application Image
       run: docker build . --file Dockerfile --tag hrittik/sample-flask
+
+    - name: Login to DockerHub
+      run: docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    - name: Push Application Image to DockerHub
+      run: docker push hrittik/sample-flask
+
     - uses: actions/checkout@v3
+
     - name: Build Mock Date Image
       run: docker build mock-data/ --file mock-data/Dockerfile --tag hrittik/mock-date
+
+    - name: Push Mock Date Image to DockerHub
+      run: docker push hrittik/mock-date
