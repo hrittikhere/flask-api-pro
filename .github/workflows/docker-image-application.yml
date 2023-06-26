@@ -3,8 +3,12 @@ name: Docker Image CI
 on:
   push:
     branches: [ "master" ]
+    paths:
+      - 'app/**'
   pull_request:
     branches: [ "master" ]
+    paths:
+      - 'app/**'
 
 jobs:
   build_application:
@@ -21,15 +25,3 @@ jobs:
 
     - name: Push Application Image to DockerHub
       run: docker push hrittik/sample-flask
-
-  build_mocker:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Build Mock Date Image
-      run: docker build mock-data/ --file mock-data/Dockerfile --tag hrittik/mock-date
-
-    - name: Push Mock Date Image to DockerHub
-      run: docker push hrittik/mock-date
