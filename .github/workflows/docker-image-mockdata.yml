@@ -1,0 +1,24 @@
+name: Docker Image Build & Push Mock Data
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - 'mock-data/**'
+  pull_request:
+    branches: [ "master" ]
+    paths:
+      - 'mock-data/**'
+
+jobs:
+  build_application:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Build Mock Data Image
+      run: docker build mock-data/ --file mock-data/Dockerfile --tag hrittik/mock-date
+
+    - name: Push Mock Data Image to DockerHub
+      run: docker push hrittik/mock-date
