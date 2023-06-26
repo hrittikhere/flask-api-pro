@@ -19,6 +19,9 @@ jobs:
 
     - name: Build Mock Data Image
       run: docker build mock-data/ --file mock-data/Dockerfile --tag hrittik/mock-date
-
+      
+    - name: Login to DockerHub
+      run: docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password ${{ secrets.DOCKERHUB_PASSWORD }}
+      
     - name: Push Mock Data Image to DockerHub
       run: docker push hrittik/mock-date
