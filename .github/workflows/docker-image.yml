@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  build_application:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,6 +22,10 @@ jobs:
     - name: Push Application Image to DockerHub
       run: docker push hrittik/sample-flask
 
+  build_mocker:
+    runs-on: ubuntu-latest
+    
+    steps:
     - uses: actions/checkout@v3
 
     - name: Build Mock Date Image
