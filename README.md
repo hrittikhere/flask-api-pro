@@ -44,7 +44,7 @@ The Flask API application has the following dependencies:
 To install the dependencies locally, run the following command:
 
 ```bash
-pip install -r app/requirements.txt -r mock-data/requirements.txt
+pip install -r app/requirements.txt mock-data/requirements.txt
 ```
 
 
@@ -57,13 +57,13 @@ Follow the steps below to set up and run the Flask API application:
 First, clone the project repository to your local machine:
 
 ```shell
-$ git clone https://github.com/hrittikhere/flask-app-pro.git
+$ git clone https://github.com/yourusername/flask-app.git
 $ cd flask-app
 ```
 
 ### 2. Build Docker Images
 
-The Flask API application and the Mocker component require Docker images to be built. Build the Docker images by running the following commands in respective directory:
+The Flask API application and the Mocker component require Docker images to be built. Build the Docker images by running the following commands:
 
 ```shell
 $ docker build -t flask-api .
@@ -129,45 +129,40 @@ To access the Flask API, follow these steps:
 
 The Flask API provides the following endpoints for managing orders:
 
-- `POST /order`: Create a new order by providing the order details in the request body.
+- `POST /orders`: Create a new order by providing the order details in the request body.
 - `GET /order/<order_id>`: Retrieve a specific order by its order ID.
-- `GET /`: Retrieve a list of all orders.
+- `GET /order`: Retrieve a list of all orders.
 - `DELETE /order/<order_id>`: Delete a specific order by its order ID.
-- `GET
-
- /order/search`: Search for orders based on specified criteria.
-
+- `GET /order/search`: Search for orders based on specified criteria.
+  
 ### Test the API
 
 Test the API by making requests to different endpoints. Here are some examples:
 
-- **Create a new order:** Send a `POST` request to `/order` with the following JSON payload:
+- Create a new order: `POST /orders` with the following JSON payload:
 
-```json
-{
-  "customer": {
-    "name": "John Doe",
-    "email": "johndoe@example.com",
-    "address": "123 Main St, City, Country"
-  },
-  "order_id": 300,
-  "product_name": "Widget",
-  "quantity": 5,
-  "order_date": "2023-06-22",
-  "priority": "high"
-}
-```
+  ```json
+  {
+    "customer": {
+      "name": "John Doe",
+      "email": "johndoe@example.com",
+      "address": "123 Main St, City, Country"
+    },
+    "order_id": 3433,
+    "product_name": "Widget",
+    "quantity": 5,
+    "order_date": "2023-06-22",
+    "priority": "high"
+  }
+  ```
 
-- **Retrieve an order:** Send a `GET` request to `/order/<order_id>`, replacing `<order_id>` with the actual order ID.
+- Get an order: `GET /order/<order_id>`
 
-- **List all orders:** Send a `GET` request to `/` to get all the orders in JSON.
+- List all orders: `GET /order`
 
-- **Delete an order:** Send a `DELETE` request to `/order/<order_id>`, replacing `<order_id>` with the actual order ID.
+- Delete an order: `DELETE /order/<order_id>`
 
-- **Search for orders:** Send a `GET` request to `/order/search?q=<search_query>`, replacing `<search_query>` with the desired search term.
-
-For more information, if your Flask application is running on `http://<flask-service-external-ip>/`, you can access the Swagger documentation at `http://<flask-service-external-ip>/apidocs` and test the endpoints interactively.
-
+- Search for an order: `GET /order/search`
 
 ## License
 
