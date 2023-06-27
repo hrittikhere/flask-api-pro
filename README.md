@@ -31,7 +31,7 @@ Before setting up and running the Flask API application, ensure that you have th
 
 - Docker: Containerization platform used to build and run the application.
 - Kubernetes (kubectl): Command-line tool for interacting with Kubernetes clusters.
-- PostgreSQL: Open-source relational database system for storing order data.
+- Helm: Package manager for Kubernetes clusters.
 
 
 ## Dependencies
@@ -96,8 +96,8 @@ $ helm install postgres bitnami/postgresql
 Apply the Kubernetes manifests to deploy the Flask application and run the job to store order data in the database. Execute the following commands:
 
 ```shell
-$ kubectl apply -f job.yml
-$ kubectl apply -f app.yml
+$ kubectl apply -f app/job.yml
+$ kubectl apply -f app/app.yml
 ```
 
 ### 5. Verify Deployment
