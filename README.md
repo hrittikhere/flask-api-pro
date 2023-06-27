@@ -133,9 +133,7 @@ The Flask API provides the following endpoints for managing orders:
 - `GET /order/<order_id>`: Retrieve a specific order by its order ID.
 - `GET /`: Retrieve a list of all orders.
 - `DELETE /order/<order_id>`: Delete a specific order by its order ID.
-- `GET
-
- /order/search`: Search for orders based on specified criteria.
+- `GET /order/search`: Search for orders based on specified product names or words or patterns.
 
 ### Test the API
 
@@ -164,7 +162,7 @@ Test the API by making requests to different endpoints. Here are some examples:
 
 - **Delete an order:** Send a `DELETE` request to `/order/<order_id>`, replacing `<order_id>` with the actual order ID.
 
-- **Search for orders:** Send a `GET` request to `/order/search?q=<search_query>`, replacing `<search_query>` with the desired search term.
+- **Search for orders:** Send a `GET` request to `/order/search?q=<search_query>`, replacing `<search_query>` with the desired search term for your product.
 
 For more information, if your Flask application is running on `http://<flask-service-external-ip>/`, you can access the Swagger documentation at `http://<flask-service-external-ip>/apidocs` and test the endpoints interactively.
 
