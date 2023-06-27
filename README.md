@@ -119,7 +119,13 @@ To access the Flask API, follow these steps:
    $ kubectl get svc flask-service
    ```
 
-2. Use tools like cURL or Postman to send HTTP requests to the API endpoints using the obtained IP address. For example:
+2. You can also use the command to fetch the IP easily externally:
+
+   ```shell
+  $ kubectl get svc flask-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}' && echo
+   ```
+
+3. Use tools like cURL or Postman to send HTTP requests to the API endpoints using the obtained IP address. For example:
 
    ```shell
    $ curl http://<flask-service-external-ip>/orders
