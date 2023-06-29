@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,7 +18,8 @@ spec:
         - name: flaskapi
           image: hrittik/sample-flask 
           ports:
-            - containerPort: 80
+            - name: flaskapiport
+              containerPort: 80
           env:
             - name: POSTGRES_PASSWORD
               valueFrom:
@@ -28,16 +28,3 @@ spec:
                   key: postgres-password
             - name: POSTGRES_HOST
               value: postgres-postgresql
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: flask-service
-spec:
-  ports:
-  - port: 80
-    protocol: TCP
-    targetPort: 80
-  selector:
-    app: flaskapi
-  type: LoadBalancer
